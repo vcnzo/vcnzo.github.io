@@ -1,0 +1,212 @@
+@page "/quiz/{SubjectId:guid}"
+@using BlazorPwa.Models
+@using BlazorPwa.Services
+@inject StudyService StudyService
+@inject NavigationManager NavManager
+
+<div class="session-container">
+    @if (CurrentSubject == null)
+    {
+        <p>Matière introuvable.</p>
+    }
+    else if (Flashcards.Count == 0)
+    {
+        <div class="empty-state">
+            <div class="icon">📭</div>
+            <h3>Aucune carte</h3>
+            <p>Il n'y a pas encore de flashcards pour cette matière.</p>
+            <button class="btn btn-primary" @onclick="GoBack">Retour</button>
+        </div>
+    }
+    else if (IsFinished)
+    {
+        <div class="finished-state">
+            <div class="icon">🎉</div>
+            <h3>Session terminée !</h3>
+            <p>Tu as révisé @Flashcards.Count cartes.</p>
+            <button class="btn btn-primary" @onclick="GoBack">Retour aux matières</button>
+        </div>
+    }
+    else
+    {
+        <div class="progress-bar">
+            <div class="progress" style="width: @(ProgressPercentage)%"></div>
+        </div>
+
+        <div class="flashcard-container">
+            <div class="flashcard @(IsFlipped ? "flipped" : "")" @onclick="FlipCard">
+                <div class="front">
+                    <span class="theme-badge">@CurrentCard.Theme</span>
+                    <div class="content">@CurrentCard.Question</div>
+                    <div class="hint">Appuie pour voir la réponse</div>
+                </div>
+                <div class="back">
+                    <div class="content">@CurrentCard.Answer</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            @if (IsFlipped)
+            {
+                <button class="btn btn-danger" @onclick="NextCard">Je ne savais pas</button>
+                <button class="btn btn-success" @onclick="NextCard">Je savais !</button>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public Guid SubjectId { get; set; }
+    
+    private Subject? CurrentSubject;
+    private List<Flashcard> Flashcards = new();
+    private int CurrentIndex = 0;
+    private bool IsFlipped = false;
+    private bool IsFinished = false;
+
+    private Flashcard CurrentCard => Flashcards[CurrentIndex];
+    private double ProgressPercentage => (double)(CurrentIndex) / Flashcards.Count * 100;
+
+    protected override void OnInitialized()
+    {
+        CurrentSubject = StudyService.GetSubject(SubjectId);
+        if (CurrentSubject != null)
+        {
+            Flashcards = StudyService.GetFlashcards(SubjectId);
+        }
+    }
+
+    private void FlipCard()
+    {
+        IsFlipped = !IsFlipped;
+    }
+
+    private void NextCard()
+    {
+        IsFlipped = false;
+        if (CurrentIndex < Flashcards.Count - 1)
+        {
+            CurrentIndex++;
+        }
+        else
+        {
+            IsFinished = true;
+        }
+    }
+
+    private void GoBack()
+    {
+        NavManager.NavigateTo("/");
+    }
+}
+
+<style>
+    .session-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .progress-bar {
+        height: 6px;
+        background: #E2E8F0;
+        border-radius: var(--radius-full);
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .progress {
+        height: 100%;
+        background: var(--color-accent);
+        transition: width 0.3s ease;
+    }
+
+    .flashcard-container {
+        flex: 1;
+        perspective: 1000px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .flashcard {
+        width: 100%;
+        height: 400px; /* Fixed height for consistency */
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+        cursor: pointer;
+    }
+
+    .flashcard.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .front, .back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        text-align: center;
+        border: 1px solid #F1F5F9;
+    }
+
+    .back {
+        transform: rotateY(180deg);
+        background: #F0FDFA; /* Light teal bg for answer */
+        border-color: var(--color-accent-light);
+    }
+
+    .theme-badge {
+        position: absolute;
+        top: 1rem;
+        background: var(--color-background);
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        font-weight: 600;
+    }
+
+    .content {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--color-primary-dark);
+    }
+
+    .hint {
+        position: absolute;
+        bottom: 1rem;
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+    }
+
+    .controls {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        height: 3rem; /* Reserve space */
+    }
+
+    .btn-danger { background-color: var(--color-danger); color: white; }
+    .btn-success { background-color: var(--color-success); color: white; }
+
+    .empty-state, .finished-state {
+        text-align: center;
+        margin-top: 4rem;
+    }
+    .empty-state .icon, .finished-state .icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+</style>

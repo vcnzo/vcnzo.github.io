@@ -1,0 +1,57 @@
+@page "/infos"
+
+<div class="infos-container">
+    <header class="header">
+        <h1>Infos</h1>
+    </header>
+
+    <div class="card">
+        <h3>À propos</h3>
+        <p>Cette application a été conçue pour aider les collégiens à réviser efficacement grâce à la méthode des flashcards et des fiches de synthèse.</p>
+    </div>
+
+    <div class="card">
+        <h3>Fonctionnalités</h3>
+        <ul>
+            <li><strong>Quiz :</strong> Teste tes connaissances par matière.</li>
+            <li><strong>Fiches :</strong> Crée tes propres fiches de révision.</li>
+            <li><strong>Scan :</strong> Numérise tes cours (bientôt disponible).</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>Version</h3>
+        <p>v1.0.0 (Bêta)</p>
+    </div>
+</div>
+
+<style>
+    .infos-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .header {
+        margin-bottom: 1rem;
+    }
+    .card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+    }
+    .card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: var(--color-primary-dark);
+    }
+    .card p, .card li {
+        color: var(--color-text);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    .card ul {
+        padding-left: 1.2rem;
+        margin: 0;
+    }
+</style>

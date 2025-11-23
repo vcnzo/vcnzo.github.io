@@ -1,0 +1,7 @@
+.vs/
+bin/
+obj/
+logs/
+*.log
+[Bb]in/
+[Oo]bj/

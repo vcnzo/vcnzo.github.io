@@ -4,109 +4,99 @@
 @inject StudyService StudyService
 @inject NavigationManager NavManager
 
-<div class="fiches-container">
-    <header class="header">
-        <h1>Mes Fiches</h1>
-        <button class="btn btn-primary btn-sm" @onclick="CreateNew">
-            <span>+</span> Nouvelle
-        </button>
+<div class="animate-fade-in">
+    <header style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+        <div>
+            <h1 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Flashcards</h1>
+            @if (SelectedSubject != null)
+            {
+                <span style="font-size: 0.875rem; color: @SelectedSubject.Color; font-weight: 600;">@SelectedSubject.Name</span>
+            }
+            else
+            {
+                <span style="font-size: 0.875rem; color: var(--text-secondary);">Toutes les matières</span>
+            }
+        </div>
+        @if (SelectedSubject != null)
+        {
+            <button class="btn" style="padding: 0.5rem; background: rgba(255,255,255,0.1); color: white;" @onclick="ClearFilter">
+                ✕
+            </button>
+        }
     </header>
 
-    <div class="fiches-grid">
-        @foreach (var sheet in Sheets)
-        {
-            var subject = StudyService.GetSubject(sheet.SubjectId);
-            <div class="fiche-card" @onclick="() => OpenSheet(sheet.Id)">
-                <div class="card-header">
-                    <span class="subject-badge" style="background-color: @(subject?.Color ?? "#ccc")">
-                        @(subject?.Name ?? "Autre")
-                    </span>
-                    <span class="date">@sheet.CreatedAt.ToString("dd/MM")</span>
+    @if (!Flashcards.Any())
+    {
+        <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+            Aucune fiche trouvée.
+        </div>
+    }
+    else
+    {
+        <div style="display: grid; gap: 1.5rem;">
+            @foreach (var group in Flashcards.GroupBy(f => f.Theme))
+            {
+                <div>
+                    <h3 style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">@group.Key</h3>
+                    <div style="display: grid; gap: 0.75rem;">
+                        @foreach (var card in group)
+                        {
+                            <div class="card" style="margin-bottom: 0; padding: 1.25rem; cursor: pointer; position: relative; overflow: hidden;" @onclick="() => FlipCard(card)">
+                                <div style="font-weight: 500; margin-bottom: 0.5rem; font-size: 1.1rem;">@card.Question</div>
+                                @if (RevealedCards.Contains(card.Id))
+                                {
+                                    <div style="color: var(--primary); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.75rem; margin-top: 0.75rem;" class="animate-fade-in">
+                                        @card.Answer
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary); text-align: center; margin-top: 0.5rem; opacity: 0.7;">
+                                        Toucher pour voir la réponse
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
                 </div>
-                <h3>@sheet.Title</h3>
-                <p class="theme">@sheet.Theme</p>
-                <div class="preview">
-                    @((MarkupString)(sheet.Content.Length > 50 ? sheet.Content.Substring(0, 50) + "..." : sheet.Content))
-                </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 </div>
 
 @code {
-    private List<RevisionSheet> Sheets = new();
+    [SupplyParameterFromQuery]
+    public Guid? SubjectId { get; set; }
 
-    protected override void OnInitialized()
+    private List<Flashcard> Flashcards = new();
+    private Subject? SelectedSubject;
+    private HashSet<Guid> RevealedCards = new();
+
+    protected override void OnParametersSet()
     {
-        Sheets = StudyService.GetSheets();
+        if (SubjectId.HasValue)
+        {
+            SelectedSubject = StudyService.GetSubject(SubjectId.Value);
+            Flashcards = StudyService.GetFlashcards(SubjectId.Value);
+        }
+        else
+        {
+            SelectedSubject = null;
+            Flashcards = StudyService.GetSubjects().SelectMany(s => StudyService.GetFlashcards(s.Id)).ToList();
+        }
+        RevealedCards.Clear();
     }
 
-    private void CreateNew()
+    private void ClearFilter()
     {
-        NavManager.NavigateTo("/fiches/new");
+        NavManager.NavigateTo("fiches");
     }
 
-    private void OpenSheet(Guid id)
+    private void FlipCard(Flashcard card)
     {
-        // For now, just edit mode or view mode. Let's go to edit for simplicity or view.
-        // Implementing View later if needed, for now let's assume we can edit/view in same place or just list them.
-        // Let's just show a "Not implemented view" or go to editor.
-        NavManager.NavigateTo($"/fiches/edit/{id}");
+        if (RevealedCards.Contains(card.Id))
+            RevealedCards.Remove(card.Id);
+        else
+            RevealedCards.Add(card.Id);
     }
 }
-
-<style>
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-    .fiches-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); /* Full width on mobile */
-        gap: 1rem;
-    }
-    .fiche-card {
-        background: white;
-        border-radius: var(--radius-lg);
-        padding: 1.25rem;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid #F1F5F9;
-        cursor: pointer;
-    }
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.5rem;
-    }
-    .subject-badge {
-        color: white;
-        padding: 0.1rem 0.5rem;
-        border-radius: var(--radius-sm);
-        font-size: 0.7rem;
-        font-weight: 600;
-    }
-    .date {
-        font-size: 0.7rem;
-        color: var(--color-text-muted);
-    }
-    .fiche-card h3 {
-        font-size: 1.1rem;
-        margin: 0.25rem 0;
-        color: var(--color-primary-dark);
-    }
-    .theme {
-        font-size: 0.85rem;
-        color: var(--color-accent);
-        margin-bottom: 0.5rem;
-    }
-    .preview {
-        font-size: 0.8rem;
-        color: var(--color-text-muted);
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-</style>

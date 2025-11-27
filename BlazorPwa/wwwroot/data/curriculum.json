@@ -1,0 +1,576 @@
+{
+    "subjects": [
+        {
+            "id": "math-5eme",
+            "name": "Mathématiques",
+            "color": "#3B82F6",
+            "icon": "📐",
+            "themes": [
+                {
+                    "name": "Nombres et calculs",
+                    "flashcards": [
+                        {
+                            "question": "Qu'est-ce qu'un nombre relatif ?",
+                            "answer": "Un nombre qui peut être positif ou négatif."
+                        },
+                        {
+                            "question": "Quel est le signe du produit de deux nombres négatifs ?",
+                            "answer": "Positif."
+                        },
+                        {
+                            "question": "Comment additionner deux fractions de même dénominateur ?",
+                            "answer": "On additionne les numérateurs et on garde le dénominateur."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un nombre premier ?",
+                            "answer": "Un nombre qui n'a que deux diviseurs : 1 et lui-même."
+                        },
+                        {
+                            "question": "Citer les 5 premiers nombres premiers.",
+                            "answer": "2, 3, 5, 7, 11."
+                        },
+                        {
+                            "question": "Simplifier l'expression 3x + 2x.",
+                            "answer": "5x"
+                        },
+                        {
+                            "question": "Développer 3(x + 2).",
+                            "answer": "3x + 6"
+                        },
+                        {
+                            "question": "Quelle est la priorité des opérations ?",
+                            "answer": "Parenthèses > Exposants > Multiplications/Divisions > Additions/Soustractions."
+                        },
+                        {
+                            "question": "Calculer -5 + 8.",
+                            "answer": "3"
+                        },
+                        {
+                            "question": "Calculer -3 - 4.",
+                            "answer": "-7"
+                        }
+                    ]
+                },
+                {
+                    "name": "Organisation et gestion de données",
+                    "flashcards": [
+                        {
+                            "question": "Comment calculer une moyenne ?",
+                            "answer": "Somme des valeurs divisée par le nombre total de valeurs."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une fréquence en statistiques ?",
+                            "answer": "Le quotient de l'effectif de la valeur par l'effectif total."
+                        },
+                        {
+                            "question": "Comment reconnaître une situation de proportionnalité sur un graphique ?",
+                            "answer": "Les points sont alignés avec l'origine."
+                        },
+                        {
+                            "question": "Si 3 kg coûtent 6€, combien coûtent 5 kg (proportionnalité) ?",
+                            "answer": "10€"
+                        },
+                        {
+                            "question": "Calculer 20% de 50.",
+                            "answer": "10"
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un ratio ?",
+                            "answer": "Un rapport entre deux quantités (ex: 2:3)."
+                        },
+                        {
+                            "question": "Formule de la vitesse moyenne ?",
+                            "answer": "v = d / t"
+                        },
+                        {
+                            "question": "Convertir 1h30 en heures décimales.",
+                            "answer": "1,5 h"
+                        },
+                        {
+                            "question": "Quelle est l'échelle si 1 cm représente 1 m ?",
+                            "answer": "1/100"
+                        },
+                        {
+                            "question": "Interpréter un diagramme circulaire.",
+                            "answer": "La surface de chaque secteur est proportionnelle à l'effectif."
+                        }
+                    ]
+                },
+                {
+                    "name": "Espace et géométrie",
+                    "flashcards": [
+                        {
+                            "question": "Somme des angles d'un triangle ?",
+                            "answer": "180 degrés."
+                        },
+                        {
+                            "question": "Inégalité triangulaire : condition pour construire un triangle ?",
+                            "answer": "La longueur du plus grand côté doit être inférieure à la somme des deux autres."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une médiatrice ?",
+                            "answer": "La droite perpendiculaire à un segment en son milieu."
+                        },
+                        {
+                            "question": "Propriété des angles alternes-internes ?",
+                            "answer": "Si deux droites parallèles sont coupées par une sécante, ils sont égaux."
+                        },
+                        {
+                            "question": "Définition d'un parallélogramme.",
+                            "answer": "Un quadrilatère dont les côtés opposés sont parallèles."
+                        },
+                        {
+                            "question": "Propriété des diagonales d'un parallélogramme.",
+                            "answer": "Elles se coupent en leur milieu."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une symétrie centrale ?",
+                            "answer": "Un demi-tour autour d'un point."
+                        },
+                        {
+                            "question": "Image d'un segment par symétrie centrale ?",
+                            "answer": "Un segment parallèle et de même longueur."
+                        },
+                        {
+                            "question": "Volume d'un prisme droit ?",
+                            "answer": "Aire de la base × Hauteur."
+                        },
+                        {
+                            "question": "Volume d'un cylindre ?",
+                            "answer": "π × r² × h"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "hist-5eme",
+            "name": "Histoire",
+            "color": "#D97706",
+            "icon": "🏛️",
+            "themes": [
+                {
+                    "name": "Chrétientés et Islam (VIe-XIIIe)",
+                    "flashcards": [
+                        {
+                            "question": "Date de l'Hégire ?",
+                            "answer": "622"
+                        },
+                        {
+                            "question": "Qu'est-ce que l'Hégire ?",
+                            "answer": "Le départ de Mahomet de La Mecque vers Médine."
+                        },
+                        {
+                            "question": "Capitale de l'Empire byzantin ?",
+                            "answer": "Constantinople."
+                        },
+                        {
+                            "question": "Qui est Charlemagne ?",
+                            "answer": "Roi des Francs et Empereur d'Occident (sacre en 800)."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une croisade ?",
+                            "answer": "Une expédition militaire chrétienne vers la Terre sainte."
+                        },
+                        {
+                            "question": "Première croisade (date) ?",
+                            "answer": "1096-1099"
+                        },
+                        {
+                            "question": "Ville sainte pour les trois religions monothéistes ?",
+                            "answer": "Jérusalem."
+                        },
+                        {
+                            "question": "Qu'est-ce que le schisme de 1054 ?",
+                            "answer": "La séparation entre l'Église catholique et l'Église orthodoxe."
+                        },
+                        {
+                            "question": "Nom du livre sacré des musulmans ?",
+                            "answer": "Le Coran."
+                        },
+                        {
+                            "question": "Lieu de culte des musulmans ?",
+                            "answer": "La mosquée."
+                        }
+                    ]
+                },
+                {
+                    "name": "Société féodale (XIe-XVe)",
+                    "flashcards": [
+                        {
+                            "question": "Qu'est-ce qu'un seigneur ?",
+                            "answer": "Le maître de la terre et des paysans."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un vassal ?",
+                            "answer": "Un guerrier lié à un seigneur par la cérémonie de l'hommage."
+                        },
+                        {
+                            "question": "Qu'est-ce que la féodalité ?",
+                            "answer": "L'organisation de la société basée sur les liens entre seigneurs et vassaux."
+                        },
+                        {
+                            "question": "Les trois ordres de la société médiévale ?",
+                            "answer": "Ceux qui prient (clergé), ceux qui combattent (noblesse), ceux qui travaillent (tiers-état)."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une charte de franchise ?",
+                            "answer": "Un texte accordant des libertés aux habitants d'une ville."
+                        },
+                        {
+                            "question": "Rôle de l'Église au Moyen Âge ?",
+                            "answer": "Encadrer la vie des fidèles, charité, enseignement."
+                        },
+                        {
+                            "question": "Style architectural des cathédrales avec arcs-boutants ?",
+                            "answer": "Art gothique."
+                        },
+                        {
+                            "question": "Qui est Jeanne d'Arc ?",
+                            "answer": "Héroïne française de la guerre de Cent Ans."
+                        },
+                        {
+                            "question": "Dynastie des rois de France après les Carolingiens ?",
+                            "answer": "Les Capétiens."
+                        },
+                        {
+                            "question": "Qu'est-ce que le domaine royal ?",
+                            "answer": "Les terres dont le roi est le seigneur direct."
+                        }
+                    ]
+                },
+                {
+                    "name": "Transformations de l'Europe (XVIe-XVIIe)",
+                    "flashcards": [
+                        {
+                            "question": "Date de la découverte de l'Amérique par Colomb ?",
+                            "answer": "1492"
+                        },
+                        {
+                            "question": "Qu'est-ce que la Renaissance ?",
+                            "answer": "Un mouvement de renouveau artistique et intellectuel né en Italie."
+                        },
+                        {
+                            "question": "Artiste célèbre de la Renaissance (Joconde) ?",
+                            "answer": "Léonard de Vinci."
+                        },
+                        {
+                            "question": "Qu'est-ce que l'Humanisme ?",
+                            "answer": "Mouvement intellectuel qui place l'homme au centre des préoccupations."
+                        },
+                        {
+                            "question": "Qui a inventé l'imprimerie (vers 1450) ?",
+                            "answer": "Gutenberg."
+                        },
+                        {
+                            "question": "Qui a lancé la Réforme protestante ?",
+                            "answer": "Martin Luther."
+                        },
+                        {
+                            "question": "Roi de France emblématique de la Renaissance ?",
+                            "answer": "François Ier."
+                        },
+                        {
+                            "question": "Édit de Nantes (date et but) ?",
+                            "answer": "1598, met fin aux guerres de religion."
+                        },
+                        {
+                            "question": "Roi Soleil ?",
+                            "answer": "Louis XIV."
+                        },
+                        {
+                            "question": "Château symbole du pouvoir de Louis XIV ?",
+                            "answer": "Versailles."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "fr-5eme",
+            "name": "Français",
+            "color": "#EC4899",
+            "icon": "📚",
+            "themes": [
+                {
+                    "name": "Le voyage et l'aventure",
+                    "flashcards": [
+                        {
+                            "question": "Qu'est-ce qu'un récit de voyage ?",
+                            "answer": "Un texte où l'auteur raconte un voyage qu'il a réellement effectué."
+                        },
+                        {
+                            "question": "Citer un grand explorateur célèbre.",
+                            "answer": "Marco Polo, Christophe Colomb..."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une description ?",
+                            "answer": "Un passage qui permet de se représenter un lieu, un personnage."
+                        },
+                        {
+                            "question": "Synonyme de 'périple' ?",
+                            "answer": "Voyage, traversée."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un roman d'aventures ?",
+                            "answer": "Un roman centré sur l'action et les péripéties du héros."
+                        },
+                        {
+                            "question": "Auteur de 'L'Île au trésor' ?",
+                            "answer": "Robert Louis Stevenson."
+                        },
+                        {
+                            "question": "Auteur de 'Le Livre de la Jungle' ?",
+                            "answer": "Rudyard Kipling."
+                        },
+                        {
+                            "question": "Qu'est-ce que le champ lexical ?",
+                            "answer": "L'ensemble des mots se rapportant à un même thème."
+                        },
+                        {
+                            "question": "Figure de style : 'La mer est un miroir'.",
+                            "answer": "Métaphore."
+                        },
+                        {
+                            "question": "Figure de style : 'Il court comme un guépard'.",
+                            "answer": "Comparaison."
+                        }
+                    ]
+                },
+                {
+                    "name": "Héros, héroïnes et héroïsmes",
+                    "flashcards": [
+                        {
+                            "question": "Qu'est-ce qu'un héros ?",
+                            "answer": "Le personnage principal, souvent doté de qualités exceptionnelles."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un chevalier ?",
+                            "answer": "Un guerrier noble à cheval au Moyen Âge."
+                        },
+                        {
+                            "question": "Qualités du chevalier ?",
+                            "answer": "Courage, loyauté, générosité."
+                        },
+                        {
+                            "question": "Qu'est-ce que le Graal ?",
+                            "answer": "Objet mythique de la quête des chevaliers de la Table Ronde."
+                        },
+                        {
+                            "question": "Qui est le roi Arthur ?",
+                            "answer": "Roi légendaire des Bretons."
+                        },
+                        {
+                            "question": "Auteur de 'Yvain ou le Chevalier au lion' ?",
+                            "answer": "Chrétien de Troyes."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un roman de chevalerie ?",
+                            "answer": "Récit médiéval en vers ou en prose racontant des exploits guerriers et amoureux."
+                        },
+                        {
+                            "question": "Qu'est-ce que l'amour courtois ?",
+                            "answer": "Idéal amoureux du Moyen Âge où le chevalier sert sa dame."
+                        },
+                        {
+                            "question": "Adjectif pour qualifier une action héroïque ?",
+                            "answer": "Prouesse, exploit."
+                        },
+                        {
+                            "question": "Antonyme de héros ?",
+                            "answer": "Lâche, traître, anti-héros."
+                        }
+                    ]
+                },
+                {
+                    "name": "Vivre en société",
+                    "flashcards": [
+                        {
+                            "question": "Auteur des 'Fourberies de Scapin' ?",
+                            "answer": "Molière."
+                        },
+                        {
+                            "question": "Genre littéraire de Molière ?",
+                            "answer": "Théâtre (Comédie)."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une didascalie ?",
+                            "answer": "Indication de mise en scène (en italique)."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une réplique ?",
+                            "answer": "Parole prononcée par un personnage."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un monologue ?",
+                            "answer": "Scène où un personnage parle seul."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un quiproquo ?",
+                            "answer": "Malentendu qui fait prendre quelqu'un ou quelque chose pour un autre."
+                        },
+                        {
+                            "question": "But de la comédie ?",
+                            "answer": "Faire rire et corriger les mœurs."
+                        },
+                        {
+                            "question": "Qu'est-ce que la satire ?",
+                            "answer": "Critique moqueuse des vices de la société."
+                        },
+                        {
+                            "question": "Définition de 'famille' au sens large ?",
+                            "answer": "Ensemble de personnes unies par des liens de parenté."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un conflit de générations ?",
+                            "answer": "Opposition entre parents et enfants."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "svt-5eme",
+            "name": "SVT",
+            "color": "#10B981",
+            "icon": "🧬",
+            "themes": [
+                {
+                    "name": "La planète Terre et l'environnement",
+                    "flashcards": [
+                        {
+                            "question": "Différence entre météo et climat ?",
+                            "answer": "Météo = temps à court terme ; Climat = moyennes sur long terme."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une ressource renouvelable ?",
+                            "answer": "Une ressource qui se régénère à l'échelle humaine (ex: bois, eau)."
+                        },
+                        {
+                            "question": "Exemple d'énergie fossile ?",
+                            "answer": "Pétrole, charbon, gaz naturel."
+                        },
+                        {
+                            "question": "Qu'est-ce que l'effet de serre ?",
+                            "answer": "Phénomène naturel qui retient la chaleur sur Terre."
+                        },
+                        {
+                            "question": "Principal gaz à effet de serre rejeté par l'homme ?",
+                            "answer": "Le dioxyde de carbone (CO2)."
+                        },
+                        {
+                            "question": "Qu'est-ce que l'érosion ?",
+                            "answer": "L'usure des roches par l'eau, le vent, etc."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un risque naturel ?",
+                            "answer": "La possibilité qu'un aléa (séisme, inondation) fasse des dégâts."
+                        },
+                        {
+                            "question": "Comment l'eau modifie-t-elle les paysages ?",
+                            "answer": "Par érosion, transport et sédimentation."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un sédiment ?",
+                            "answer": "Dépôt de particules (sable, boue) transportées par l'eau."
+                        },
+                        {
+                            "question": "Action de l'homme positive sur l'environnement ?",
+                            "answer": "Recyclage, reforestation, énergies vertes."
+                        }
+                    ]
+                },
+                {
+                    "name": "Le vivant et son évolution",
+                    "flashcards": [
+                        {
+                            "question": "Organe respiratoire des poissons ?",
+                            "answer": "Les branchies."
+                        },
+                        {
+                            "question": "Organe respiratoire des insectes ?",
+                            "answer": "Les trachées."
+                        },
+                        {
+                            "question": "De quoi ont besoin les plantes vertes pour se nourrir ?",
+                            "answer": "Eau, sels minéraux, CO2, lumière."
+                        },
+                        {
+                            "question": "Qu'est-ce que la photosynthèse ?",
+                            "answer": "Production de matière organique par les plantes à la lumière."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une cellule ?",
+                            "answer": "L'unité de base de tous les êtres vivants."
+                        },
+                        {
+                            "question": "Parties d'une cellule ?",
+                            "answer": "Membrane, cytoplasme, noyau."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'un fossile ?",
+                            "answer": "Reste ou trace d'être vivant conservé dans la roche."
+                        },
+                        {
+                            "question": "Que nous apprennent les fossiles ?",
+                            "answer": "Que la vie a changé au cours du temps (évolution)."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une espèce ?",
+                            "answer": "Groupe d'êtres vivants qui se ressemblent et peuvent se reproduire entre eux."
+                        },
+                        {
+                            "question": "Crise de la biodiversité ?",
+                            "answer": "Disparition rapide d'un grand nombre d'espèces."
+                        }
+                    ]
+                },
+                {
+                    "name": "Le corps humain et la santé",
+                    "flashcards": [
+                        {
+                            "question": "Quels sont les besoins des muscles pour fonctionner ?",
+                            "answer": "Nutriments (glucose) et dioxygène."
+                        },
+                        {
+                            "question": "Quel gaz est rejeté par les muscles ?",
+                            "answer": "Le dioxyde de carbone (CO2)."
+                        },
+                        {
+                            "question": "Rôle du cœur ?",
+                            "answer": "Pomper le sang pour le faire circuler dans tout le corps."
+                        },
+                        {
+                            "question": "Fréquence cardiaque ?",
+                            "answer": "Nombre de battements du cœur par minute."
+                        },
+                        {
+                            "question": "Rôle de la digestion ?",
+                            "answer": "Transformer les aliments en nutriments."
+                        },
+                        {
+                            "question": "Où passent les nutriments après la digestion ?",
+                            "answer": "Dans le sang (absorption intestinale)."
+                        },
+                        {
+                            "question": "Rôle des reins ?",
+                            "answer": "Filtrer le sang et produire l'urine."
+                        },
+                        {
+                            "question": "Qu'est-ce qu'une enzyme ?",
+                            "answer": "Une substance qui accélère la digestion des aliments."
+                        },
+                        {
+                            "question": "Effet du sport sur le corps ?",
+                            "answer": "Augmente le rythme cardiaque et respiratoire."
+                        },
+                        {
+                            "question": "Alimentation équilibrée ?",
+                            "answer": "Manger de tout en quantités adaptées aux besoins."
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

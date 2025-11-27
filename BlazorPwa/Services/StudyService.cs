@@ -1,43 +1,64 @@
+using System.Net.Http.Json;
 using BlazorPwa.Models;
 
 namespace BlazorPwa.Services;
 
 public class StudyService
 {
+    private readonly HttpClient _http;
     private readonly List<Subject> _subjects = new();
     private readonly List<Flashcard> _flashcards = new();
     private readonly List<RevisionSheet> _sheets = new();
+    private bool _initialized = false;
 
-    public StudyService()
+    public StudyService(HttpClient http)
     {
-        SeedData();
+        _http = http;
     }
 
-    private void SeedData()
+    public async Task InitializeAsync()
     {
-        // Subjects
-        var math = new Subject { Name = "Mathématiques", Color = "#3B82F6", Icon = "📐" };
-        var history = new Subject { Name = "Histoire", Color = "#D97706", Icon = "🏛️" };
-        var french = new Subject { Name = "Français", Color = "#EC4899", Icon = "📚" };
-        var science = new Subject { Name = "SVT", Color = "#10B981", Icon = "🧬" };
+        if (_initialized) return;
 
-        _subjects.AddRange(new[] { math, history, french, science });
+        try 
+        {
+            var data = await _http.GetFromJsonAsync<CurriculumData>("data/curriculum.json");
+            if (data != null)
+            {
+                _subjects.Clear();
+                _flashcards.Clear();
 
-        // Flashcards - Math
-        _flashcards.Add(new Flashcard { SubjectId = math.Id, Theme = "Algèbre", Question = "Qu'est-ce qu'une équation ?", Answer = "Une égalité comportant une ou plusieurs inconnues." });
-        _flashcards.Add(new Flashcard { SubjectId = math.Id, Theme = "Géométrie", Question = "Formule de l'aire d'un triangle ?", Answer = "Base × Hauteur / 2" });
-        
-        // Flashcards - History
-        _flashcards.Add(new Flashcard { SubjectId = history.Id, Theme = "Moyen Âge", Question = "Date du sacre de Charlemagne ?", Answer = "L'an 800" });
-        
-        // Sheets
-        _sheets.Add(new RevisionSheet 
-        { 
-            SubjectId = math.Id, 
-            Title = "Théorème de Pythagore", 
-            Theme = "Géométrie",
-            Content = "Dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés.\n\nFormule : a² + b² = c²"
-        });
+                foreach (var subjectDto in data.Subjects)
+                {
+                    var subject = new Subject 
+                    { 
+                        Name = subjectDto.Name, 
+                        Color = subjectDto.Color, 
+                        Icon = subjectDto.Icon 
+                    };
+                    _subjects.Add(subject);
+
+                    foreach (var theme in subjectDto.Themes)
+                    {
+                        foreach (var cardDto in theme.Flashcards)
+                        {
+                            _flashcards.Add(new Flashcard
+                            {
+                                SubjectId = subject.Id,
+                                Theme = theme.Name,
+                                Question = cardDto.Question,
+                                Answer = cardDto.Answer
+                            });
+                        }
+                    }
+                }
+            }
+            _initialized = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading curriculum: {ex.Message}");
+        }
     }
 
     public List<Subject> GetSubjects() => _subjects;
@@ -55,5 +76,30 @@ public class StudyService
         sheet.Id = Guid.NewGuid();
         sheet.CreatedAt = DateTime.Now;
         _sheets.Add(sheet);
+    }
+
+    private class CurriculumData
+    {
+        public List<SubjectDto> Subjects { get; set; } = new();
+    }
+
+    private class SubjectDto
+    {
+        public string Name { get; set; } = "";
+        public string Color { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public List<ThemeDto> Themes { get; set; } = new();
+    }
+
+    private class ThemeDto
+    {
+        public string Name { get; set; } = "";
+        public List<FlashcardDto> Flashcards { get; set; } = new();
+    }
+
+    private class FlashcardDto
+    {
+        public string Question { get; set; } = "";
+        public string Answer { get; set; } = "";
     }
 }

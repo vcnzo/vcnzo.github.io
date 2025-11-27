@@ -1,80 +1,122 @@
+@page "/quiz"
 @page "/quiz/{SubjectId:guid}"
 @using BlazorPwa.Models
 @using BlazorPwa.Services
 @inject StudyService StudyService
 @inject NavigationManager NavManager
 
-<div class="session-container">
-    @if (CurrentSubject == null)
+<div class="animate-fade-in" style="height: 100%; display: flex; flex-direction: column;">
+    @if (IsLoading)
     {
-        <p>Matière introuvable.</p>
+        <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+            <div class="spinner"></div>
+        </div>
     }
     else if (Flashcards.Count == 0)
     {
-        <div class="empty-state">
-            <div class="icon">📭</div>
-            <h3>Aucune carte</h3>
-            <p>Il n'y a pas encore de flashcards pour cette matière.</p>
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">📭</div>
+            <h3 style="margin-bottom: 0.5rem;">Aucune carte</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Il n'y a pas encore de questions disponibles.</p>
             <button class="btn btn-primary" @onclick="GoBack">Retour</button>
         </div>
     }
     else if (IsFinished)
     {
-        <div class="finished-state">
-            <div class="icon">🎉</div>
-            <h3>Session terminée !</h3>
-            <p>Tu as révisé @Flashcards.Count cartes.</p>
-            <button class="btn btn-primary" @onclick="GoBack">Retour aux matières</button>
+        <div class="animate-fade-in" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem;">
+            <div style="font-size: 5rem; margin-bottom: 1rem;">🎉</div>
+            <h2 style="margin-bottom: 0.5rem;">Session terminée !</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Tu as révisé @Flashcards.Count cartes.</p>
+            
+            <div style="display: grid; gap: 1rem; width: 100%; max-width: 300px;">
+                <button class="btn btn-primary" @onclick="Restart">Recommencer</button>
+                <button class="btn" style="background: rgba(255,255,255,0.1);" @onclick="GoBack">Retour à l'accueil</button>
+            </div>
         </div>
     }
     else
     {
-        <div class="progress-bar">
-            <div class="progress" style="width: @(ProgressPercentage)%"></div>
+        <div style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; color: var(--text-secondary);">
+                    Question @(CurrentIndex + 1) / @Flashcards.Count
+                </span>
+                <span style="font-size: 0.875rem; color: @(CurrentSubject?.Color ?? "var(--primary)"); font-weight: 600;">
+                    @(CurrentSubject?.Name ?? "Quiz Aléatoire")
+                </span>
+            </div>
+            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;">
+                <div style="height: 100%; background: var(--gradient-primary); width: @(ProgressPercentage)%; transition: width 0.3s ease;"></div>
+            </div>
         </div>
 
-        <div class="flashcard-container">
-            <div class="flashcard @(IsFlipped ? "flipped" : "")" @onclick="FlipCard">
-                <div class="front">
+        <div style="flex: 1; perspective: 1000px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
+            <div class="quiz-card @(IsFlipped ? "flipped" : "")" @onclick="FlipCard">
+                <div class="quiz-card-face quiz-card-front">
                     <span class="theme-badge">@CurrentCard.Theme</span>
-                    <div class="content">@CurrentCard.Question</div>
-                    <div class="hint">Appuie pour voir la réponse</div>
+                    <div style="font-size: 1.5rem; font-weight: 600; line-height: 1.4;">@CurrentCard.Question</div>
+                    <div style="margin-top: auto; font-size: 0.875rem; color: var(--text-secondary); opacity: 0.8;">
+                        Toucher pour retourner
+                    </div>
                 </div>
-                <div class="back">
-                    <div class="content">@CurrentCard.Answer</div>
+                <div class="quiz-card-face quiz-card-back">
+                    <div style="font-size: 1.25rem; line-height: 1.5;">@CurrentCard.Answer</div>
                 </div>
             </div>
         </div>
 
-        <div class="controls">
+        <div style="height: 80px; display: flex; gap: 1rem; justify-content: center; align-items: flex-end;">
             @if (IsFlipped)
             {
-                <button class="btn btn-danger" @onclick="NextCard">Je ne savais pas</button>
-                <button class="btn btn-success" @onclick="NextCard">Je savais !</button>
+                <button class="btn animate-fade-in" style="flex: 1; background: #ef4444; color: white;" @onclick="NextCard">
+                    Je ne savais pas
+                </button>
+                <button class="btn animate-fade-in" style="flex: 1; background: #10b981; color: white;" @onclick="NextCard">
+                    Je savais !
+                </button>
             }
         </div>
     }
 </div>
 
 @code {
-    [Parameter] public Guid SubjectId { get; set; }
+    [Parameter] public Guid? SubjectId { get; set; }
     
     private Subject? CurrentSubject;
     private List<Flashcard> Flashcards = new();
     private int CurrentIndex = 0;
     private bool IsFlipped = false;
     private bool IsFinished = false;
+    private bool IsLoading = true;
 
     private Flashcard CurrentCard => Flashcards[CurrentIndex];
-    private double ProgressPercentage => (double)(CurrentIndex) / Flashcards.Count * 100;
+    private double ProgressPercentage => (double)(CurrentIndex + 1) / Flashcards.Count * 100;
 
-    protected override void OnInitialized()
+    protected override async Task OnParametersSetAsync()
     {
-        CurrentSubject = StudyService.GetSubject(SubjectId);
-        if (CurrentSubject != null)
+        IsLoading = true;
+        // Simulate small delay for smooth transition if needed or just ensure data is loaded
+        await Task.Delay(100); 
+
+        if (SubjectId.HasValue)
         {
-            Flashcards = StudyService.GetFlashcards(SubjectId);
+            CurrentSubject = StudyService.GetSubject(SubjectId.Value);
+            Flashcards = StudyService.GetFlashcards(SubjectId.Value);
+            // Shuffle for specific subject too? Maybe not, keep order or shuffle? Let's shuffle.
+            Flashcards = Flashcards.OrderBy(x => Guid.NewGuid()).ToList();
         }
+        else
+        {
+            CurrentSubject = null;
+            // Random quiz: take all flashcards and shuffle
+            var allCards = StudyService.GetSubjects().SelectMany(s => StudyService.GetFlashcards(s.Id)).ToList();
+            Flashcards = allCards.OrderBy(x => Guid.NewGuid()).Take(20).ToList(); // Limit to 20 for random quiz
+        }
+        
+        CurrentIndex = 0;
+        IsFinished = false;
+        IsFlipped = false;
+        IsLoading = false;
     }
 
     private void FlipCard()
@@ -87,12 +129,18 @@
         IsFlipped = false;
         if (CurrentIndex < Flashcards.Count - 1)
         {
+            // Small delay to allow flip back animation if we wanted, but instant is snappier for drilling
             CurrentIndex++;
         }
         else
         {
             IsFinished = true;
         }
+    }
+
+    private void Restart()
+    {
+        OnParametersSetAsync();
     }
 
     private void GoBack()
@@ -102,111 +150,65 @@
 }
 
 <style>
-    .session-container {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .progress-bar {
-        height: 6px;
-        background: #E2E8F0;
-        border-radius: var(--radius-full);
-        margin-bottom: 2rem;
-        overflow: hidden;
-    }
-
-    .progress {
-        height: 100%;
-        background: var(--color-accent);
-        transition: width 0.3s ease;
-    }
-
-    .flashcard-container {
-        flex: 1;
-        perspective: 1000px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 2rem;
-    }
-
-    .flashcard {
+    .quiz-card {
         width: 100%;
-        height: 400px; /* Fixed height for consistency */
+        height: 100%;
+        max-height: 400px;
         position: relative;
         transform-style: preserve-3d;
-        transition: transform 0.6s;
+        transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
         cursor: pointer;
     }
 
-    .flashcard.flipped {
+    .quiz-card.flipped {
         transform: rotateY(180deg);
     }
 
-    .front, .back {
+    .quiz-card-face {
         position: absolute;
         width: 100%;
         height: 100%;
         backface-visibility: hidden;
-        background: white;
+        background: var(--surface);
         border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 2rem;
         text-align: center;
-        border: 1px solid #F1F5F9;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
     }
 
-    .back {
+    .quiz-card-back {
         transform: rotateY(180deg);
-        background: #F0FDFA; /* Light teal bg for answer */
-        border-color: var(--color-accent-light);
+        background: var(--surface-light);
+        border-color: var(--primary);
     }
 
     .theme-badge {
         position: absolute;
-        top: 1rem;
-        background: var(--color-background);
+        top: 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
         padding: 0.25rem 0.75rem;
-        border-radius: var(--radius-full);
+        border-radius: 100px;
         font-size: 0.75rem;
-        color: var(--color-text-muted);
-        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
-    .content {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--color-primary-dark);
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255,255,255,0.1);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        animation: spin 1s ease-in-out infinite;
     }
 
-    .hint {
-        position: absolute;
-        bottom: 1rem;
-        font-size: 0.8rem;
-        color: var(--color-text-muted);
-    }
-
-    .controls {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        height: 3rem; /* Reserve space */
-    }
-
-    .btn-danger { background-color: var(--color-danger); color: white; }
-    .btn-success { background-color: var(--color-success); color: white; }
-
-    .empty-state, .finished-state {
-        text-align: center;
-        margin-top: 4rem;
-    }
-    .empty-state .icon, .finished-state .icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
+    @@keyframes spin {
+        to { transform: rotate(360deg); }
     }
 </style>

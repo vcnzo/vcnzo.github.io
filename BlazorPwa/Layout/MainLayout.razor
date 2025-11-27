@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavManager
+@inject BlazorPwa.Services.StudyService StudyService
 
 <div class="app-container">
     <main class="main-content">
@@ -11,7 +12,7 @@
             <svg viewBox="0 0 24 24">
                 <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z"/>
             </svg>
-            <span>Quiz</span>
+            <span>Accueil</span>
         </div>
         <div class="nav-item @(IsActive("fiches") ? "active" : "")" @onclick='() => NavigateTo("fiches")'>
             <svg viewBox="0 0 24 24">
@@ -29,6 +30,11 @@
 </div>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        await StudyService.InitializeAsync();
+    }
+
     private void NavigateTo(string uri)
     {
         NavManager.NavigateTo(uri);

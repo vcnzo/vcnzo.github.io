@@ -61,6 +61,8 @@ h6 {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    height: 100dvh;
+    /* Dynamic viewport height for mobile browsers */
     overflow: hidden;
 }
 
@@ -68,8 +70,8 @@ h6 {
     flex: 1;
     overflow-y: auto;
     padding: var(--spacing-md);
-    padding-bottom: 80px;
-    /* Space for bottom nav */
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    /* Space for bottom nav + safe area */
 }
 
 /* Bottom Nav */

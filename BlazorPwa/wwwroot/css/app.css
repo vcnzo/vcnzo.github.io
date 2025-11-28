@@ -39,37 +39,6 @@
 
 body {
     font-family: var(--font-main);
-    background-color: var(--background);
-    color: var(--text);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: var(--font-display);
-    font-weight: 700;
-    line-height: 1.2;
-}
-
-/* Layout */
-.app-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    height: 100dvh;
-    /* Dynamic viewport height for mobile browsers */
-    overflow: hidden;
-}
-
-.main-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: var(--spacing-md);
     padding-bottom: calc(80px + env(safe-area-inset-bottom));
     /* Space for bottom nav + safe area */
 }

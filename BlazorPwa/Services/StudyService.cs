@@ -1,14 +1,21 @@
 using System.Net.Http.Json;
 using BlazorPwa.Models;
 
+using Microsoft.JSInterop;
+
 namespace BlazorPwa.Services;
 
 public class StudyService
 {
-    private readonly Microsoft.JSInterop.IJSRuntime _js;
+    private readonly HttpClient _http;
+    private readonly IJSRuntime _js;
+    private readonly List<Subject> _subjects = new();
+    private readonly List<Flashcard> _flashcards = new();
+    private readonly List<RevisionSheet> _sheets = new();
+    private bool _initialized = false;
     private UserProgress _progress = new();
 
-    public StudyService(HttpClient http, Microsoft.JSInterop.IJSRuntime js)
+    public StudyService(HttpClient http, IJSRuntime js)
     {
         _http = http;
         _js = js;

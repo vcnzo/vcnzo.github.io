@@ -10,19 +10,19 @@
             <h1 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Flashcards</h1>
             @if (SelectedSubject != null)
             {
-                <span style="font-size: 0.875rem; color: @SelectedSubject.Color; font-weight: 600;">@SelectedSubject.Name</span>
+                <span style="font-size: 0.875rem; color: var(--text-secondary);">@SelectedSubject.Name</span>
             }
             else
             {
                 <span style="font-size: 0.875rem; color: var(--text-secondary);">Toutes les matières</span>
             }
         </div>
-        @if (SelectedSubject != null)
+        @* @if (SelectedSubject != null)
         {
             <button class="btn" style="padding: 0.5rem; background: rgba(255,255,255,0.1); color: white;" @onclick="ClearFilter">
                 ✕
             </button>
-        }
+        } *@
     </header>
 
     @if (!Flashcards.Any())
@@ -57,11 +57,11 @@
                                             <div style="color: var(--primary); margin-bottom: 1rem;">@card.Answer</div>
                                             
                                             <div style="display: flex; gap: 0.5rem; justify-content: center;" @onclick:stopPropagation="true">
-                                                <button class="btn" style="background: #ef4444; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;" @onclick="() => RateCard(card, false)">
-                                                    ✕ Pas su
+                                                <button class="btn" style="width: 80px; background: #ef4444; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;" @onclick="()  => RateCard(card, false)">
+                                                    ✕
                                                 </button>
-                                                <button class="btn" style="background: #10b981; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;" @onclick="() => RateCard(card, true)">
-                                                    ✓ Su
+                                                <button class="btn" style="width: 80px; background: #10b981; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;" @onclick="() => RateCard(card, true)">
+                                                    ✓
                                                 </button>
                                             </div>
                                         </div>

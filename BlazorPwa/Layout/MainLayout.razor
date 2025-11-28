@@ -32,7 +32,15 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await StudyService.InitializeAsync();
+        try
+        {
+            await StudyService.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"CRITICAL ERROR in MainLayout: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+        }
     }
 
     private void NavigateTo(string uri)

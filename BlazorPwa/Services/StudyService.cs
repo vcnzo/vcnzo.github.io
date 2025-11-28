@@ -5,15 +5,13 @@ namespace BlazorPwa.Services;
 
 public class StudyService
 {
-    private readonly HttpClient _http;
-    private readonly List<Subject> _subjects = new();
-    private readonly List<Flashcard> _flashcards = new();
-    private readonly List<RevisionSheet> _sheets = new();
-    private bool _initialized = false;
+    private readonly Microsoft.JSInterop.IJSRuntime _js;
+    private UserProgress _progress = new();
 
-    public StudyService(HttpClient http)
+    public StudyService(HttpClient http, Microsoft.JSInterop.IJSRuntime js)
     {
         _http = http;
+        _js = js;
     }
 
     public async Task InitializeAsync()
@@ -53,6 +51,8 @@ public class StudyService
                     }
                 }
             }
+            
+            await LoadProgressAsync();
             _initialized = true;
         }
         catch (Exception ex)
@@ -77,6 +77,54 @@ public class StudyService
         sheet.CreatedAt = DateTime.Now;
         _sheets.Add(sheet);
     }
+
+    public async Task LoadProgressAsync()
+    {
+        try
+        {
+            var json = await _js.InvokeAsync<string>("localStorage.getItem", "userProgress");
+            if (!string.IsNullOrEmpty(json))
+            {
+                _progress = System.Text.Json.JsonSerializer.Deserialize<UserProgress>(json) ?? new UserProgress();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading progress: {ex.Message}");
+        }
+    }
+
+    public async Task SaveProgressAsync()
+    {
+        try
+        {
+            _progress.LastUpdated = DateTime.Now;
+            var json = System.Text.Json.JsonSerializer.Serialize(_progress);
+            await _js.InvokeVoidAsync("localStorage.setItem", "userProgress", json);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving progress: {ex.Message}");
+        }
+    }
+
+    public async Task RecordFlashcardResult(Guid cardId, bool success)
+    {
+        if (!_progress.FlashcardResults.ContainsKey(cardId))
+        {
+            _progress.TotalCardsLearned++;
+        }
+
+        _progress.FlashcardResults[cardId] = success;
+        
+        // Update quiz stats if this is considered a quiz action (optional, but good for stats)
+        _progress.TotalQuizTaken++;
+        if (success) _progress.TotalCorrectAnswers++;
+
+        await SaveProgressAsync();
+    }
+
+    public UserProgress GetProgress() => _progress;
 
     private class CurriculumData
     {

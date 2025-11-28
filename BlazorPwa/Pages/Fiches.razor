@@ -33,31 +33,49 @@
     }
     else
     {
-        <div style="display: grid; gap: 1.5rem;">
+        <div style="display: grid; gap: 1rem;">
             @foreach (var group in Flashcards.GroupBy(f => f.Theme))
             {
-                <div>
-                    <h3 style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">@group.Key</h3>
-                    <div style="display: grid; gap: 0.75rem;">
-                        @foreach (var card in group)
-                        {
-                            <div class="card" style="margin-bottom: 0; padding: 1.25rem; cursor: pointer; position: relative; overflow: hidden;" @onclick="() => FlipCard(card)">
-                                <div style="font-weight: 500; margin-bottom: 0.5rem; font-size: 1.1rem;">@card.Question</div>
-                                @if (RevealedCards.Contains(card.Id))
-                                {
-                                    <div style="color: var(--primary); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.75rem; margin-top: 0.75rem;" class="animate-fade-in">
-                                        @card.Answer
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div style="font-size: 0.75rem; color: var(--text-secondary); text-align: center; margin-top: 0.5rem; opacity: 0.7;">
-                                        Toucher pour voir la réponse
-                                    </div>
-                                }
-                            </div>
-                        }
+                var isExpanded = ExpandedThemes.Contains(group.Key);
+                <div style="background: var(--surface); border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                    <div @onclick="() => ToggleTheme(group.Key)" 
+                         style="padding: 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.02);">
+                        <h3 style="font-size: 0.9rem; color: var(--text); font-weight: 600; margin: 0;">@group.Key</h3>
+                        <span style="transform: rotate(@(isExpanded ? "180deg" : "0deg")); transition: transform 0.3s ease;">▼</span>
                     </div>
+                    
+                    @if (isExpanded)
+                    {
+                        <div style="padding: 1rem; display: grid; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                            @foreach (var card in group)
+                            {
+                                <div class="card" style="margin-bottom: 0; padding: 1.25rem; cursor: pointer; position: relative; overflow: hidden; background: var(--surface-light);" @onclick="() => FlipCard(card)">
+                                    <div style="font-weight: 500; margin-bottom: 0.5rem; font-size: 1.1rem;">@card.Question</div>
+                                    @if (RevealedCards.Contains(card.Id))
+                                    {
+                                        <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.75rem; margin-top: 0.75rem;" class="animate-fade-in">
+                                            <div style="color: var(--primary); margin-bottom: 1rem;">@card.Answer</div>
+                                            
+                                            <div style="display: flex; gap: 0.5rem; justify-content: center;" @onclick:stopPropagation="true">
+                                                <button class="btn" style="background: #ef4444; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;" @onclick="() => RateCard(card, false)">
+                                                    ✕ Pas su
+                                                </button>
+                                                <button class="btn" style="background: #10b981; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;" @onclick="() => RateCard(card, true)">
+                                                    ✓ Su
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-align: center; margin-top: 0.5rem; opacity: 0.7;">
+                                            Toucher pour voir la réponse
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
                 </div>
             }
         </div>
@@ -71,6 +89,7 @@
     private List<Flashcard> Flashcards = new();
     private Subject? SelectedSubject;
     private HashSet<Guid> RevealedCards = new();
+    private HashSet<string> ExpandedThemes = new();
 
     protected override void OnParametersSet()
     {
@@ -85,6 +104,7 @@
             Flashcards = StudyService.GetSubjects().SelectMany(s => StudyService.GetFlashcards(s.Id)).ToList();
         }
         RevealedCards.Clear();
+        ExpandedThemes.Clear();
     }
 
     private void ClearFilter()
@@ -98,5 +118,20 @@
             RevealedCards.Remove(card.Id);
         else
             RevealedCards.Add(card.Id);
+    }
+
+    private void ToggleTheme(string theme)
+    {
+        if (ExpandedThemes.Contains(theme))
+            ExpandedThemes.Remove(theme);
+        else
+            ExpandedThemes.Add(theme);
+    }
+
+    private async Task RateCard(Flashcard card, bool success)
+    {
+        await StudyService.RecordFlashcardResult(card.Id, success);
+        // Optional: Close card or give feedback
+        RevealedCards.Remove(card.Id);
     }
 }

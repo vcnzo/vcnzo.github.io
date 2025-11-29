@@ -66,18 +66,9 @@
                                     <div class="flipper">
                                         <div class="front" style="@frontStyle" @onclick="() => FlipCard(card)">
                                             <div style="font-weight: 500; font-size: 1.1rem;">@card.Question</div>
-                                            @if (result.HasValue)
-                                            {
-                                                <div style="margin-top: 0.5rem; font-size: 1.5rem;">
-                                                    @(result.Value ? "✅" : "❌")
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 1rem; opacity: 0.7;">
-                                                    Toucher pour voir la réponse
-                                                </div>
-                                            }
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 1rem; opacity: 0.7;">
+                                                Toucher pour voir la réponse
+                                            </div>
                                         </div>
                                         <div class="back" @onclick="() => FlipCard(card)">
                                             <div style="color: var(--primary); margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">@card.Answer</div>

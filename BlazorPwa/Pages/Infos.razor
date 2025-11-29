@@ -50,6 +50,7 @@
     {
         StudyService.OnChange += HandleChange;
         await StudyService.LoadProgressAsync();
+        await StudyService.CheckForUpdatesAsync();
         Progress = StudyService.GetProgress();
     }
 

@@ -106,6 +106,18 @@ public class StudyService
         }
     }
 
+    public async Task CheckForUpdatesAsync()
+    {
+        try
+        {
+            await _js.InvokeVoidAsync("checkForUpdates");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error checking for updates: {ex.Message}");
+        }
+    }
+
     public async Task SaveProgressAsync()
     {
         try

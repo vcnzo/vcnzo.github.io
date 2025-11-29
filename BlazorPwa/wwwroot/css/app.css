@@ -191,491 +191,115 @@ h6 {
 }
 
 .glass {
-    :root {
-        /* Colors */
-        --primary: #6366f1;
-        --primary-dark: #4f46e5;
-        --secondary: #ec4899;
-        --background: #0f172a;
-        --surface: #1e293b;
-        --surface-light: #334155;
-        --text: #f8fafc;
-        --text-secondary: #94a3b8;
-        --success: #10b981;
-        --error: #ef4444;
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-        /* Gradients */
-        --gradient-primary: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
-        --gradient-surface: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(30, 41, 59, 0.4) 100%);
-
-        /* Spacing */
-        --spacing-xs: 0.5rem;
-        --spacing-sm: 1rem;
-        --spacing-md: 1.5rem;
-        --spacing-lg: 2rem;
-
-        /* Radius */
-        --radius-sm: 0.5rem;
-        --radius-md: 1rem;
-        --radius-lg: 1.5rem;
-
-        /* Fonts */
-        --font-main: 'Inter', sans-serif;
-        --font-display: 'Outfit', sans-serif;
+/* Animations */
+@keyframes walk-across {
+    0% {
+        left: -50px;
+        transform: scaleX(1);
     }
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
+    45% {
+        left: 100%;
+        transform: scaleX(1);
     }
 
-    body {
-        font-family: var(--font-main);
-        background-color: var(--background);
-        color: var(--text);
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
+    50% {
+        left: 100%;
+        transform: scaleX(-1);
     }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        font-family: var(--font-display);
-        font-weight: 700;
-        line-height: 1.2;
+    95% {
+        left: -50px;
+        transform: scaleX(-1);
     }
 
-    /* Layout */
-    .app-container {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        height: 100dvh;
-        /* Dynamic viewport height for mobile browsers */
-        overflow: hidden;
+    100% {
+        left: -50px;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
 
-    .main-content {
-        flex: 1;
-        overflow-y: auto;
-        padding: var(--spacing-md);
-        padding-bottom: calc(80px + env(safe-area-inset-bottom));
-        /* Space for bottom nav + safe area */
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    /* Bottom Nav */
-    .bottom-nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 70px;
-        background: rgba(15, 23, 42, 0.8);
-        backdrop-filter: blur(12px);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        z-index: 100;
-        padding-bottom: env(safe-area-inset-bottom);
-    }
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
 
-    .nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-secondary);
-        font-size: 0.75rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        padding: 0.5rem;
-        border-radius: var(--radius-md);
-    }
+/* Quiz Card Styles (Shared) */
+.quiz-card {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    cursor: pointer;
+}
 
-    .nav-item svg {
-        width: 24px;
-        height: 24px;
-        margin-bottom: 4px;
-        fill: currentColor;
-        transition: transform 0.3s ease;
-    }
+.quiz-card.flipped {
+    transform: rotateY(180deg);
+}
 
-    .nav-item.active {
-        color: var(--primary);
-    }
+.quiz-card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
 
-    .nav-item.active svg {
-        transform: translateY(-2px);
-        filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
-    }
+.quiz-card-front {
+    background: var(--surface);
+}
 
-    /* Cards */
-    .card {
-        background: var(--surface);
-        border-radius: var(--radius-md);
-        padding: var(--spacing-md);
-        margin-bottom: var(--spacing-md);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+.quiz-card-back {
+    transform: rotateY(180deg);
+    background: var(--surface-light);
+    border-color: var(--primary);
+}
 
-    .card:active {
-        transform: scale(0.98);
-    }
+.theme-badge {
+    position: absolute;
+    top: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
 
-    .card-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .card-icon {
-        font-size: 2rem;
-        margin-right: var(--spacing-sm);
-        background: rgba(255, 255, 255, 0.1);
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: var(--radius-sm);
-    }
-
-    .card-title {
-        font-size: 1.25rem;
-        color: var(--text);
-    }
-
-    /* Buttons */
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.75rem 1.5rem;
-        border-radius: var(--radius-md);
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-family: var(--font-main);
-    }
-
-    .btn-primary {
-        background: var(--gradient-primary);
-        color: white;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-    }
-
-    .btn-primary:active {
-        transform: scale(0.95);
-    }
-
-    /* Utilities */
-    .text-gradient {
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .glass {
-        background: rgba(30, 41, 59, 0.6);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* Animations */
-    @keyframes walk-across {
-        0% {
-            left: -50px;
-            transform: scaleX(1);
-        }
-
-        45% {
-            left: 100%;
-            transform: scaleX(1);
-        }
-
-        50% {
-            left: 100%;
-            transform: scaleX(-1);
-        }
-
-        95% {
-            left: -50px;
-            transform: scaleX(-1);
-        }
-
-        100% {
-            left: -50px;
-            transform: scaleX(1);
-        }
-    }
-
-    /* Flip Card Styles */
-    .flip-container {
-        perspective: 1000px;
-        cursor: pointer;
-        margin-bottom: 0;
-    }
-
-    .flip-container.flipped .flipper {
-        transform: rotateY(180deg);
-    }
-
-    .flipper {
-        transition: 0.6s;
-        transform-style: preserve-3d;
-        position: relative;
-        min-height: 100px;
-        /* Adjust as needed */
-    }
-
-    .front,
-    .back {
-        backface-visibility: hidden;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-radius: var(--radius-md);
-        padding: 1.25rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .front {
-        z-index: 2;
-        transform: rotateY(0deg);
-        background: var(--surface-light);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .back {
-        transform: rotateY(180deg);
-        background: var(--surface);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        to {
-            align-items: center;
-            z-index: 100;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 0.5rem;
-            border-radius: var(--radius-md);
-        }
-
-        .nav-item svg {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 4px;
-            fill: currentColor;
-            transition: transform 0.3s ease;
-        }
-
-        .nav-item.active {
-            color: var(--primary);
-        }
-
-        .nav-item.active svg {
-            transform: translateY(-2px);
-            filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
-        }
-
-        /* Cards */
-        .card {
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            padding: var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card:active {
-            transform: scale(0.98);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .card-icon {
-            font-size: 2rem;
-            margin-right: var(--spacing-sm);
-            background: rgba(255, 255, 255, 0.1);
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-sm);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            color: var(--text);
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: var(--font-main);
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:active {
-            transform: scale(0.95);
-        }
-
-        /* Utilities */
-        .text-gradient {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .glass {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Animations */
-        @keyframes walk-across {
-            0% {
-                left: -50px;
-                transform: scaleX(1);
-            }
-
-            45% {
-                left: 100%;
-                transform: scaleX(1);
-            }
-
-            50% {
-                left: 100%;
-                transform: scaleX(-1);
-            }
-
-            95% {
-                left: -50px;
-                transform: scaleX(-1);
-            }
-
-            100% {
-                left: -50px;
-                transform: scaleX(1);
-            }
-        }
-
-        /* Flip Card Styles */
-        .flip-container {
-            perspective: 1000px;
-            cursor: pointer;
-            margin-bottom: 0;
-        }
-
-        .flip-container.flipped .flipper {
-            transform: rotateY(180deg);
-        }
-
-        .flipper {
-            transition: 0.6s;
-            transform-style: preserve-3d;
-            position: relative;
-            min-height: 100px;
-            /* Adjust as needed */
-        }
-
-        .front,
-        .back {
-            backface-visibility: hidden;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: var(--radius-md);
-            padding: 1.25rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .front {
-            z-index: 2;
-            transform: rotateY(0deg);
-            background: var(--surface-light);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .back {
-            transform: rotateY(180deg);
-            background: var(--surface);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-    }
+.subject-badge {
+    position: absolute;
+    top: 1.5rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }

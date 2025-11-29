@@ -86,7 +86,7 @@
 
 @code {
     [SupplyParameterFromQuery]
-    public Guid? SubjectId { get; set; }
+    public string? SubjectId { get; set; }
 
     private List<Flashcard> Flashcards = new();
     private Subject? SelectedSubject;
@@ -118,10 +118,10 @@
 
     private void LoadData()
     {
-        if (SubjectId.HasValue)
+        if (!string.IsNullOrEmpty(SubjectId))
         {
-            SelectedSubject = StudyService.GetSubject(SubjectId.Value);
-            Flashcards = StudyService.GetFlashcards(SubjectId.Value);
+            SelectedSubject = StudyService.GetSubject(SubjectId);
+            Flashcards = StudyService.GetFlashcards(SubjectId);
         }
         else
         {

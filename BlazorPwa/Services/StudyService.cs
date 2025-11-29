@@ -37,6 +37,7 @@ public class StudyService
                 {
                     var subject = new Subject 
                     { 
+                        Id = subjectDto.Id,
                         Name = subjectDto.Name, 
                         Color = subjectDto.Color, 
                         Icon = subjectDto.Icon 
@@ -74,9 +75,9 @@ public class StudyService
 
     public List<Subject> GetSubjects() => _subjects;
     
-    public Subject? GetSubject(Guid id) => _subjects.FirstOrDefault(s => s.Id == id);
+    public Subject? GetSubject(string id) => _subjects.FirstOrDefault(s => s.Id == id);
 
-    public List<Flashcard> GetFlashcards(Guid subjectId) => 
+    public List<Flashcard> GetFlashcards(string subjectId) => 
         _flashcards.Where(f => f.SubjectId == subjectId).ToList();
 
     public List<RevisionSheet> GetSheets() => 
@@ -144,6 +145,7 @@ public class StudyService
 
     private class SubjectDto
     {
+        public string Id { get; set; } = "";
         public string Name { get; set; } = "";
         public string Color { get; set; } = "";
         public string Icon { get; set; } = "";

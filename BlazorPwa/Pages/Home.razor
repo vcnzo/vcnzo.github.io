@@ -10,7 +10,7 @@
     <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Matières</h2>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem;">
-        @foreach (var subject in StudyService.GetSubjects())
+        @foreach (var subject in HardcodedSubjects)
         {
             <div class="card" style="cursor: pointer; border-left: 4px solid @subject.Color; display: flex; flex-direction: column; align-items: flex-start; padding: 1rem; margin-bottom: 0;" @onclick="() => OpenSubject(subject.Id)">
                 <div style="font-size: 1.75rem; margin-bottom: 0.25rem;">@subject.Icon</div>
@@ -39,6 +39,14 @@
 @implements IDisposable
 
 @code {
+    private static readonly List<BlazorPwa.Models.Subject> HardcodedSubjects = new()
+    {
+        new() { Id = "math-5eme", Name = "Maths", Color = "#3B82F6", Icon = "📐" },
+        new() { Id = "hist-5eme", Name = "Histoire", Color = "#D97706", Icon = "🏛️" },
+        new() { Id = "fr-5eme", Name = "Français", Color = "#EC4899", Icon = "📚" },
+        new() { Id = "svt-5eme", Name = "SVT", Color = "#10B981", Icon = "🧬" }
+    };
+
     protected override void OnInitialized()
     {
         StudyService.OnChange += StateHasChanged;
@@ -49,7 +57,7 @@
         StudyService.OnChange -= StateHasChanged;
     }
 
-    private void OpenSubject(Guid id)
+    private void OpenSubject(string id)
     {
         NavManager.NavigateTo($"fiches?subjectId={id}");
     }
@@ -59,8 +67,10 @@
         NavManager.NavigateTo("quiz");
     }
 
-    private int GetFlashcardCount(Guid subjectId)
+    private int GetFlashcardCount(string subjectId)
     {
-        return StudyService.GetFlashcards(subjectId).Count;
+        // If service is not ready or subject not found, return 0
+        var cards = StudyService.GetFlashcards(subjectId);
+        return cards?.Count ?? 0;
     }
 }

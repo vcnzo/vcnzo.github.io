@@ -84,6 +84,8 @@
 
 @implements IDisposable
 
+@inject IJSRuntime JS
+
 @code {
     [SupplyParameterFromQuery]
     public string? SubjectId { get; set; }
@@ -154,7 +156,9 @@
     private async Task RateCard(Flashcard card, bool success)
     {
         await StudyService.RecordFlashcardResult(card.Id, success);
-        // Optional: Close card or give feedback
         RevealedCards.Remove(card.Id);
+        // Small delay to let the UI update (collapse card) before scrolling
+        await Task.Delay(50);
+        await JS.InvokeVoidAsync("window.scrollBy", new { top = 150, behavior = "smooth" });
     }
 }

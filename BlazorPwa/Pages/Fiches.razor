@@ -145,12 +145,24 @@
             RevealedCards.Add(card.Id);
     }
 
-    private void ToggleTheme(string theme)
+    private async Task ToggleTheme(string theme)
     {
         if (ExpandedThemes.Contains(theme))
+        {
             ExpandedThemes.Remove(theme);
+        }
         else
+        {
             ExpandedThemes.Add(theme);
+            // Find first card of this theme
+            var firstCard = Flashcards.FirstOrDefault(f => f.Theme == theme);
+            if (firstCard != null)
+            {
+                // Small delay to allow rendering
+                await Task.Delay(100);
+                await JS.InvokeVoidAsync("scrollToElement", "card-" + firstCard.Id);
+            }
+        }
     }
 
     private async Task RateCard(Flashcard card, bool success)

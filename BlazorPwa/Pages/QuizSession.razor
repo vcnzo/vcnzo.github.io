@@ -53,9 +53,10 @@
         <div style="flex: 1; perspective: 1000px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
             <div class="quiz-card @(IsFlipped ? "flipped" : "")" @onclick="FlipCard">
                 <div class="quiz-card-face quiz-card-front">
+                    <span class="subject-badge-top">@GetSubjectName(CurrentCard)</span>
                     <span class="theme-badge">@CurrentCard.Theme</span>
                     <div style="font-size: 1.5rem; font-weight: 600; line-height: 1.4;">@CurrentCard.Question</div>
-                    <div style="margin-top: auto; font-size: 0.875rem; color: var(--text-secondary); opacity: 0.8;">
+                    <div class="card-instruction">
                         Toucher pour retourner
                     </div>
                 </div>
@@ -156,76 +157,4 @@
     }
 }
 
-<style>
-    .quiz-card {
-        width: 100%;
-        height: 100%;
-        max-height: 400px;
-        position: relative;
-        transform-style: preserve-3d;
-        transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
-        cursor: pointer;
-    }
 
-    .quiz-card.flipped {
-        transform: rotateY(180deg);
-    }
-
-    .quiz-card-face {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        background: var(--surface);
-        border-radius: var(--radius-lg);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        text-align: center;
-        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-    }
-
-    .quiz-card-back {
-        transform: rotateY(180deg);
-        background: var(--surface-light);
-        border-color: var(--primary);
-    }
-
-    .theme-badge {
-        position: absolute;
-        top: 1.5rem;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 0.25rem 0.75rem;
-        border-radius: 100px;
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .subject-badge {
-        position: absolute;
-        top: 1.5rem;
-        font-size: 1rem;
-        color: var(--text-secondary);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid rgba(255,255,255,0.1);
-        border-radius: 50%;
-        border-top-color: var(--primary);
-        animation: spin 1s ease-in-out infinite;
-    }
-
-    @@keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-</style>

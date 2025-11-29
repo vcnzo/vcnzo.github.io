@@ -49,7 +49,7 @@
                         <div style="padding: 1rem; display: grid; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
                             @foreach (var card in group)
                             {
-                                <div class="card" style="margin-bottom: 0; padding: 1.25rem; cursor: pointer; position: relative; overflow: hidden; background: var(--surface-light);" @onclick="() => FlipCard(card)">
+                                <div id="card-@card.Id" class="card flashcard-item" style="margin-bottom: 0; padding: 1.25rem; cursor: pointer; position: relative; overflow: hidden; background: var(--surface-light);" @onclick="() => FlipCard(card)">
                                     <div style="font-weight: 500; margin-bottom: 0.5rem; font-size: 1.1rem;">@card.Question</div>
                                     @if (RevealedCards.Contains(card.Id))
                                     {
@@ -159,6 +159,6 @@
         RevealedCards.Remove(card.Id);
         // Small delay to let the UI update (collapse card) before scrolling
         await Task.Delay(50);
-        await JS.InvokeVoidAsync("window.scrollBy", new { top = 150, behavior = "smooth" });
+        await JS.InvokeVoidAsync("scrollToNextCard", card.Id.ToString());
     }
 }

@@ -50,114 +50,66 @@
     <div id="update-toast"
         style="position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 16px; border-radius: 8px; display: none; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
         <span>Nouvelle version disponible !</span>
-        <button onclick="window.location.reload()" <!DOCTYPE html>
-            <html lang="en">
+        <button onclick="window.location.reload()"
+            style="margin-left: 10px; background: #6366f1; border: none; color: white; padding: 4px 12px; border-radius: 4px; cursor: pointer;">
+            Mettre
+            à jour
+        </button>
+    </div>
 
-            <head>
-                <meta charset="utf-8" />
-                <meta name="viewport"
-                    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-                <title>Révisions 5ème</title>
-                <base href="/" />
-                <link rel="preconnect" href="https://fonts.googleapis.com">
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                <link
-                    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap"
-                    rel="stylesheet">
-                <link href="css/app.css" rel="stylesheet" />
-                <link rel="icon" type="image/png" href="favicon.png" />
-                <link href="BlazorPwa.styles.css" rel="stylesheet" />
-                <link href="manifest.webmanifest" rel="manifest" />
-                <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-                <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
-            </head>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        window.checkForUpdates = () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.update();
+                    console.log("Checking for updates...");
+                });
+            }
+        };
 
-            <body>
-                <div id="app">
-                    <div
-                        style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0f172a;color:white;flex-direction:column">
-                        <svg width="50" height="50" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                            style="animation: spin 1s linear infinite; margin-bottom: 20px;">
-                            <style>
-                                @keyframes spin {
-                                    100% {
-                                        transform: rotate(360deg);
-                                    }
-                                }
-                            </style>
-                            <path d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
-                                opacity=".25" fill="currentColor" />
-                            <path d="M12 4a8 8 0 0 1 7.89 6.7 1 1 0 1 1 1.95-.48A10 10 0 0 0 12 2Z"
-                                fill="currentColor" />
-                        </svg>
-                        <p style="font-family: sans-serif;">Chargement...</p>
-                    </div>
-                </div>
+        window.scrollToNextCard = (currentCardId) => {
+            const currentCard = document.getElementById('card-' + currentCardId);
+            if (!currentCard) return;
 
-                <div id="blazor-error-ui">
-                    Une erreur est survenue.
-                    <a href="." class="reload">Recharger</a>
-                    <span class="dismiss">🗙</span>
-                </div>
+            const cards = Array.from(document.querySelectorAll('.flashcard-item'));
+            const currentIndex = cards.indexOf(currentCard);
 
-                <div id="update-toast"
-                    style="position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 16px; border-radius: 8px; display: none; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    <span>Nouvelle version disponible !</span>
-                    <button onclick="window.location.reload()"
-                        style="margin-left: 10px; background: #6366f1; border: none; color: white; padding: 4px 12px; border-radius: 4px; cursor: pointer;">Mettre
-                        à jour</button>
-                </div>
+            if (currentIndex >= 0 && currentIndex < cards.length - 1) {
+                const nextCard = cards[currentIndex + 1];
+                nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        };
 
-                <script src="_framework/blazor.webassembly.js"></script>
-                <script>
-                    window.checkForUpdates = () => {
-                        if ('serviceWorker' in navigator) {
-                            navigator.serviceWorker.ready.then(registration => {
-                                registration.update();
-                                console.log("Checking for updates...");
-                            });
+        window.scrollToElement = (elementId, alignToTop) => {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: alignToTop ? 'start' : 'center'
+                });
+            }
+        };
+
+        navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' }).then(registration => {
+            registration.onupdatefound = () => {
+                const installingWorker = registration.installing;
+                installingWorker.onstatechange = () => {
+                    if (installingWorker.state === 'installed') {
+                        if (navigator.serviceWorker.controller) {
+                            // New update available
+                            const toast = document.getElementById('update-toast');
+                            if (toast) toast.style.display = 'block';
+                            console.log('New content is available; please refresh.');
+                        } else {
+                            // Content is cached for the first time
+                            console.log('Content is cached for offline use.');
                         }
-                    };
+                    }
+                };
+            };
+        });
+    </script>
+</body>
 
-                    window.scrollToNextCard = (currentCardId) => {
-                        const currentCard = document.getElementById('card-' + currentCardId);
-                        if (!currentCard) return;
-
-                        const cards = Array.from(document.querySelectorAll('.flashcard-item'));
-                        const currentIndex = cards.indexOf(currentCard);
-
-                        if (currentIndex >= 0 && currentIndex < cards.length - 1) {
-                            const nextCard = cards[currentIndex + 1];
-                            nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    };
-
-                    window.scrollToElement = (elementId) => {
-                        const element = document.getElementById(elementId);
-                        if (element) {
-                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    };
-
-                    navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' }).then(registration => {
-                        registration.onupdatefound = () => {
-                            const installingWorker = registration.installing;
-                            installingWorker.onstatechange = () => {
-                                if (installingWorker.state === 'installed') {
-                                    if (navigator.serviceWorker.controller) {
-                                        // New update available
-                                        const toast = document.getElementById('update-toast');
-                                        if (toast) toast.style.display = 'block';
-                                        console.log('New content is available; please refresh.');
-                                    } else {
-                                        // Content is cached for the first time
-                                        console.log('Content is cached for offline use.');
-                                    }
-                                }
-                            };
-                        };
-                    });
-                </script>
-            </body>
-
-            </html>
+</html>

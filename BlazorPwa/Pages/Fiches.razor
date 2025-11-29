@@ -37,8 +37,9 @@
             @foreach (var group in Flashcards.GroupBy(f => f.Theme))
             {
                 var isExpanded = ExpandedThemes.Contains(group.Key);
+                var themeId = "theme-" + Math.Abs(group.Key.GetHashCode());
                 <div style="background: var(--surface); border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
-                    <div @onclick="() => ToggleTheme(group.Key)" 
+                    <div id="@themeId" @onclick="() => ToggleTheme(group.Key, themeId)" 
                          style="padding: 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.02);">
                         <h3 style="font-size: 0.9rem; color: var(--text); font-weight: 600; margin: 0;">@group.Key</h3>
                         <span style="transform: rotate(@(isExpanded ? "180deg" : "0deg")); transition: transform 0.3s ease;">▼</span>
@@ -145,7 +146,7 @@
             RevealedCards.Add(card.Id);
     }
 
-    private async Task ToggleTheme(string theme)
+    private async Task ToggleTheme(string theme, string elementId)
     {
         if (ExpandedThemes.Contains(theme))
         {
@@ -154,14 +155,9 @@
         else
         {
             ExpandedThemes.Add(theme);
-            // Find first card of this theme
-            var firstCard = Flashcards.FirstOrDefault(f => f.Theme == theme);
-            if (firstCard != null)
-            {
-                // Small delay to allow rendering
-                await Task.Delay(100);
-                await JS.InvokeVoidAsync("scrollToElement", "card-" + firstCard.Id);
-            }
+            // Small delay to allow rendering
+            await Task.Delay(100);
+            await JS.InvokeVoidAsync("scrollToElement", elementId, true);
         }
     }
 

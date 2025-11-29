@@ -39,6 +39,14 @@
         <h3>Version</h3>
         <p>v1.0.1 (Bêta)</p>
     </div>
+
+    <div class="card" style="border: 1px solid var(--error);">
+        <h3 style="color: var(--error);">Zone de danger</h3>
+        <p style="margin-bottom: 1rem;">Si tu veux recommencer à zéro, tu peux effacer toute ta progression ici.</p>
+        <button class="btn" style="background: var(--error); color: white; width: 100%;" @onclick="ResetProgress">
+            Réinitialiser ma progression
+        </button>
+    </div>
 </div>
 
 @implements IDisposable
@@ -67,20 +75,28 @@
 
     private string GetKawaiiAvatar()
     {
-        if (Progress.TotalCardsLearned < 10) return "🌱";
-        if (Progress.TotalCardsLearned < 50) return "🌿";
-        if (Progress.TotalCardsLearned < 100) return "🌳";
-        if (Progress.TotalCardsLearned < 200) return "🦄";
-        return "👑";
+        if (Progress.TotalCardsLearned < 10) return "🌰"; // Graine/Noisette (Totoro)
+        if (Progress.TotalCardsLearned < 50) return "🌱"; // Pousse
+        if (Progress.TotalCardsLearned < 100) return "🍃"; // Feuilles au vent
+        if (Progress.TotalCardsLearned < 200) return "🌳"; // Grand Arbre
+        return "👻"; // Esprit de la forêt (Kodama/Totoro style)
     }
 
     private string GetLevelTitle()
     {
-        if (Progress.TotalCardsLearned < 10) return "Débutant Curieux";
-        if (Progress.TotalCardsLearned < 50) return "Apprenti Sérieux";
-        if (Progress.TotalCardsLearned < 100) return "Expert en Herbe";
-        if (Progress.TotalCardsLearned < 200) return "Maître des Fiches";
-        return "Légende du Collège";
+        if (Progress.TotalCardsLearned < 10) return "Petite Noisette";
+        if (Progress.TotalCardsLearned < 50) return "Pousse Courageuse";
+        if (Progress.TotalCardsLearned < 100) return "Esprit des Feuilles";
+        if (Progress.TotalCardsLearned < 200) return "Gardien de l'Arbre";
+        return "Totoro Suprême";
+    }
+
+    private async Task ResetProgress()
+    {
+        if (await JS.InvokeAsync<bool>("confirm", "Es-tu sûr de vouloir tout effacer ? Cette action est irréversible !"))
+        {
+            await StudyService.ResetProgressAsync();
+        }
     }
 }
 

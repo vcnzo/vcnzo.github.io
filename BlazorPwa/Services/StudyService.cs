@@ -148,6 +148,13 @@ public class StudyService
         await SaveProgressAsync();
     }
 
+    public async Task ResetProgressAsync()
+    {
+        _progress = new UserProgress();
+        await SaveProgressAsync();
+        NotifyStateChanged();
+    }
+
     public UserProgress GetProgress() => _progress;
 
     private class CurriculumData

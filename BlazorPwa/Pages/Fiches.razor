@@ -32,9 +32,15 @@
             {
                 var isExpanded = ExpandedThemes.Contains(group.Key);
                 var themeId = "theme-" + Math.Abs(group.Key.GetHashCode());
+                var subjectId = group.First().SubjectId;
+                var subject = StudyService.GetSubject(subjectId);
+                var color = subject?.Color ?? "var(--primary)";
+                
                 <div style="background: var(--surface); border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
                     <div id="@themeId" @onclick="() => ToggleTheme(group.Key, themeId)" 
-                         style="padding: 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.02);">
+                         style="padding: 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; 
+                                background: linear-gradient(90deg, @(color)1A 0%, rgba(255,255,255,0.02) 100%);
+                                border-left: 4px solid @color;">
                         <h3 style="font-size: 0.9rem; color: var(--text); font-weight: 600; margin: 0;">@group.Key</h3>
                         <span style="transform: rotate(@(isExpanded ? "180deg" : "0deg")); transition: transform 0.3s ease;">▼</span>
                     </div>
@@ -58,7 +64,7 @@
                                     @if (RevealedCards.Contains(card.Id))
                                     {
                                         <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.75rem; margin-top: 0.75rem;" class="animate-fade-in">
-                                            <div style="color: var(--primary); margin-bottom: 1rem;">@card.Answer</div>
+                                            <div style="color: var(--primary); margin-bottom: 1rem; font-size: 1.1rem;">@card.Answer</div>
                                             
                                             <div style="display: flex; gap: 0.5rem; justify-content: center;" @onclick:stopPropagation="true">
                                                 <button class="btn" style="width: 80px; background: #ef4444; color: white; padding: 0.5rem 1rem; font-size: 0.9rem;" @onclick="()  => RateCard(card, false)">
@@ -173,7 +179,7 @@
         await JS.InvokeVoidAsync("scrollToNextCard", card.Id.ToString());
     }
 
-    private bool? GetCardResult(string cardId)
+    private bool? GetCardResult(Guid guidId)
     {
         var progress = StudyService.GetProgress();
         // Note: Progress uses Guid for now, but we are moving to string IDs. 
@@ -181,15 +187,22 @@
         // But our Flashcard model now uses string Id.
         // We should probably update UserProgress to use string keys or parse the string Id to Guid if possible.
         // Assuming Flashcard.Id is a string representation of a Guid for now, or we update UserProgress.
-        
+
         // Let's check UserProgress definition first.
-        if (Guid.TryParse(cardId, out Guid guidId))
+        // if (Guid.TryParse(cardId, out Guid guidId))
+        // {
+        //      if (progress.FlashcardResults.TryGetValue(guidId, out bool success))
+        //      {
+        //          return success;
+        //      }
+        // }
+        // return null;
+
+        if (progress.FlashcardResults.TryGetValue(guidId, out bool success))
         {
-             if (progress.FlashcardResults.TryGetValue(guidId, out bool success))
-             {
-                 return success;
-             }
+            return success;
         }
+
         return null;
     }
 }

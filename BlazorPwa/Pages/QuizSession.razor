@@ -80,7 +80,7 @@
 </div>
 
 @code {
-    [Parameter] public Guid? SubjectId { get; set; }
+    [Parameter] public string? SubjectId { get; set; }
     
     private Subject? CurrentSubject;
     private List<Flashcard> Flashcards = new();
@@ -98,10 +98,10 @@
         // Simulate small delay for smooth transition if needed or just ensure data is loaded
         await Task.Delay(100); 
 
-        if (SubjectId.HasValue)
+        if (!string.IsNullOrEmpty(SubjectId))
         {
-            CurrentSubject = StudyService.GetSubject(SubjectId.Value);
-            Flashcards = StudyService.GetFlashcards(SubjectId.Value);
+            CurrentSubject = StudyService.GetSubject(SubjectId);
+            Flashcards = StudyService.GetFlashcards(SubjectId);
             // Shuffle for specific subject too? Maybe not, keep order or shuffle? Let's shuffle.
             Flashcards = Flashcards.OrderBy(x => Guid.NewGuid()).ToList();
         }

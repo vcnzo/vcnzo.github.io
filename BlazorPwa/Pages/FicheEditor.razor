@@ -61,7 +61,7 @@
         }
         else
         {
-            Sheet.SubjectId = Subjects.FirstOrDefault()?.Id ?? Guid.Empty;
+            Sheet.SubjectId = Subjects.FirstOrDefault()?.Id ?? string.Empty;
         }
     }
 

@@ -36,7 +36,19 @@
     </div>
 </div>
 
+@implements IDisposable
+
 @code {
+    protected override void OnInitialized()
+    {
+        StudyService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        StudyService.OnChange -= StateHasChanged;
+    }
+
     private void OpenSubject(Guid id)
     {
         NavManager.NavigateTo($"fiches?subjectId={id}");

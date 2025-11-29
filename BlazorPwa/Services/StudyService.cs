@@ -61,12 +61,16 @@ public class StudyService
             
             await LoadProgressAsync();
             _initialized = true;
+            NotifyStateChanged();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading curriculum: {ex.Message}");
         }
     }
+
+    public event Action? OnChange;
+    private void NotifyStateChanged() => OnChange?.Invoke();
 
     public List<Subject> GetSubjects() => _subjects;
     

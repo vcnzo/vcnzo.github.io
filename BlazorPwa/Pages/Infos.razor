@@ -41,13 +41,27 @@
     </div>
 </div>
 
+@implements IDisposable
+
 @code {
     private BlazorPwa.Models.UserProgress Progress = new();
 
     protected override async Task OnInitializedAsync()
     {
+        StudyService.OnChange += HandleChange;
         await StudyService.LoadProgressAsync();
         Progress = StudyService.GetProgress();
+    }
+
+    public void Dispose()
+    {
+        StudyService.OnChange -= HandleChange;
+    }
+
+    private void HandleChange()
+    {
+        Progress = StudyService.GetProgress();
+        StateHasChanged();
     }
 
     private string GetKawaiiAvatar()

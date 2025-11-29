@@ -82,6 +82,8 @@
     }
 </div>
 
+@implements IDisposable
+
 @code {
     [SupplyParameterFromQuery]
     public Guid? SubjectId { get; set; }
@@ -91,7 +93,30 @@
     private HashSet<Guid> RevealedCards = new();
     private HashSet<string> ExpandedThemes = new();
 
+    protected override void OnInitialized()
+    {
+        StudyService.OnChange += HandleChange;
+    }
+
+    public void Dispose()
+    {
+        StudyService.OnChange -= HandleChange;
+    }
+
+    private void HandleChange()
+    {
+        LoadData();
+        StateHasChanged();
+    }
+
     protected override void OnParametersSet()
+    {
+        LoadData();
+        RevealedCards.Clear();
+        ExpandedThemes.Clear();
+    }
+
+    private void LoadData()
     {
         if (SubjectId.HasValue)
         {
@@ -103,8 +128,6 @@
             SelectedSubject = null;
             Flashcards = StudyService.GetSubjects().SelectMany(s => StudyService.GetFlashcards(s.Id)).ToList();
         }
-        RevealedCards.Clear();
-        ExpandedThemes.Clear();
     }
 
     private void ClearFilter()
